@@ -1,0 +1,21 @@
+{
+  "name": "WaterMark",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.6.9",
+    "gulp": "^3.8.11",
+    "gulp-less": "^3.0.3",
+    "gulp-nodemon": "^2.0.3",
+    "gulp-sourcemaps": "^1.5.2",
+    "less": "^2.5.0",
+    "node-static": "0.7.6",
+    "socket.io": "^1.3.5"
+  }
+}
