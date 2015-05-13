@@ -21,7 +21,7 @@ function start_game() {
     theme = document.createElement('audio');
     theme.setAttribute('src', 'assets/frogger.mp3');
     theme.setAttribute('loop', 'true');
-    theme.play();
+    //theme.play();
     sprites = new Image();
     deadsprite = new Image();
     sprites.src = "assets/frogger_sprites.png"; 
