@@ -1,7 +1,10 @@
 var FROGGER_SQLI = FROGGER_SQLI || function(){
 	
 	var socket = null,
-		timeStep = 0;
+		timeStep = 0,
+		trackMovement = false,
+		backMovement = false,
+		sendEvent = false;
 
 	function init(){		
 		socket = io();
@@ -50,15 +53,38 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 				motion.accelerationIncludingGravity.z
 				);*/
 			var data = motion.acceleration.y;
+			//console.log("Acc : %s",data);
 			if (data > 8){
-				var timestamp = new Date().getTime();
-				if (timestamp - timeStep > 500){
-					timeStep = timestamp;
-					socket.emit('message',{action: 'jump'})	;
-					console.info("Acc : %s ",data);
+				if (!trackMovement){					
+					trackMovement = true;
+					console.info("Track Movement Acc : %s ",data);					
+				}else if (sendEvent && !backMovement){
+					console.info("Back Movement Acc : %s ",data);					
+					backMovement = true;
 				}
+			}else if (trackMovement && !sendEvent && data < 0){
+				timeStep = new Date().getTime();
+				sendEvent = true;
+				console.info("Send jump instruction ");					
+				socket.emit('message',{action: 'jump'});
+			}else if (trackMovement && sendEvent && backMovement && data < 1){
+				console.info("Reset ");					
+				trackMovement = false;
+				backMovement = false;
+				sendEvent = false;
 			}
 		}, true);
+
+		setInterval(function(){
+			if (trackMovement){
+				var timestamp = new Date().getTime();
+				if (timestamp - timeStep > 1000){
+					backMovement = false;
+					trackMovement = false;
+					sendEvent = false;
+				}
+			}
+		},1000);
 	}
 
 	init();
