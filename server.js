@@ -23,8 +23,9 @@ io.on('connection', function (socket) {
   
 	console.log('Got a new client');
 	socket.emit('connection', "connection");
-	socket.on('message', function (from, msg) {
-		console.log('I received a private message by ', from, ' saying ', msg);
+	socket.on('message', function (msg) {
+		io.emit('message',msg);
+		console.log('I received a private message by ', msg);
 	});
 
 
