@@ -53,25 +53,28 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 				motion.accelerationIncludingGravity.z
 				);*/
 			var data = motion.acceleration.y;
-			//console.log("Acc : %s",data);
-			if (data > 8){
+			//console.warn("Acc : %s",data);
+			if (data > 5){
 				if (!trackMovement){					
 					trackMovement = true;
 					console.info("Track Movement Acc : %s ",data);					
+					timeStep = new Date().getTime();
 				}else if (sendEvent && !backMovement){
 					console.info("Back Movement Acc : %s ",data);					
 					backMovement = true;
+					timeStep = new Date().getTime();
 				}
 			}else if (trackMovement && !sendEvent && data < 0){
-				timeStep = new Date().getTime();
 				sendEvent = true;
 				console.info("Send jump instruction ");					
 				socket.emit('message',{action: 'jump'});
-			}else if (trackMovement && sendEvent && backMovement && data < 1){
-				console.info("Reset ");					
+				timeStep = new Date().getTime();
+			}else if (trackMovement && sendEvent && backMovement && data < 0){
+				console.info("Reset ");				
 				trackMovement = false;
 				backMovement = false;
 				sendEvent = false;
+				timeStep = new Date().getTime();	
 			}
 		}, true);
 
