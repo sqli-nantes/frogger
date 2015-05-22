@@ -33,3 +33,42 @@ body{
 	background-image: url(../assets/refresh.png);
 	background-repeat: no-repeat;
 }
+
+.title{
+	position: absolute;
+	background: url(../assets/frogger_sprites.png) 0 0 no-repeat;
+	width:334px;
+	height:54px;
+	background-position: 0 0;
+	left: 50%;
+	top: 50%;
+	margin-left: -167px;
+	margin-top: -27px;
+}
+
+.validate-user{
+	width:100%;
+	height: 20px;
+	position: absolute;
+	top: calc(50% + 10px);
+
+	input, .validate{
+		margin-left: 10px;
+		width: calc(50% - 10px);
+		position: absolute;
+		top: 0;
+		height: 25px;
+	}
+	input{
+		left: 0;
+	}
+
+	.validate{
+		text-align: center;
+		left: 50%;
+		background:white;
+		border-radius: 5px;
+		border: thin solid black;
+	}
+}
+

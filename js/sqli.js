@@ -5,7 +5,8 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 		step1 = false,
 		step2 = false,
 		step3 = false,
-		lastMax = 0;
+		lastMax = 0,
+		boing = false;
 
 	function init(){		
 		socket = io();
@@ -39,11 +40,20 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 		var resetElemnt = document.querySelector('.reset');
 		resetElemnt.addEventListener('click', function(){
 			game.lives = 5;
+			game.score = 0;
+			game.level = 1;
 			game.reset();
 		});
 
+		boing = document.createElement('audio');
+	    boing.setAttribute('src', 'assets/boing.wav');
+	    boing.loop = false;
+
 		socket.on('message', function(message){
 			if (message.action && message.action === 'jump'){
+				boing.currentTime = 0;
+				boing.play();
+				boing.loop = false;
 				up();
 			}
 		});
@@ -62,12 +72,13 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 
 
 
-			var data = Math.abs(motion.acceleration.y);
-			//console.warn("Acc : %s",data);
-			if (data > 10){				
+			var dataY = Math.abs(motion.acceleration.y);
+			var dataX = Math.abs(motion.acceleration.x);
+			//console.warn("Acc : %s",dataY);
+			if (dataY > 10){				
 				timeStep = new Date().getTime();
-				if (lastMax < data){
-					lastMax = data;
+				if (lastMax < dataY){
+					lastMax = dataY;
 				}else if (!step1){
 					step1 =  true;
 					socket.emit('message',{
@@ -89,9 +100,22 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 				}
 			}
 
+			if (!step1){
+				console.info("Move x : %s ",dataX);
+			}
+
 
 			
 		}, true);
+
+		var validateElemnt = document.querySelector('.validate');
+		validateElemnt.addEventListener('click', function(){
+			var loginValue = document.querySelector('input').value;
+			if (loginValue.length > 0 ){
+				socket.emit('message', {login : loginValue});
+			}
+			
+		});
 
 		setInterval(function(){
 			if (step1){
