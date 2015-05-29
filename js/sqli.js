@@ -151,7 +151,7 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 		var loginElement = document.querySelector('input');
 		validateElement.addEventListener('click', function(){
 			var loginValue = loginElement.value;
-			if (loginValue.length > 0 ){
+			if (loginValue.length > 0 && !loginElement.disabled){
 				socket.emit('message', {login : loginValue});
 				validateElement.setAttribute('disabled',true);
 				loginElement.setAttribute('disabled',true);
@@ -209,6 +209,8 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 				top10 = top10.slice(0,10);
 			}
 		}
+
+
 
 
 		localStorage.setItem('scores', scores);
