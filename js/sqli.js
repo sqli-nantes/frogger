@@ -7,7 +7,9 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 		step3 = false,
 		lastMax = 0,
 		boing = false,
-		touch = {};
+		touch = {},
+		currentLogin = 'anonymous'
+		top10 = [];
 
 	function init(){		
 		socket = io();
@@ -44,6 +46,7 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 			game.score = 0;
 			game.level = 1;
 			game.reset();
+			socket.emit('message',{action : 'start'});
 		});
 
 		boing = document.createElement('audio');
@@ -60,6 +63,8 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 				left();
 			}else if (message.action && message.action === 'right'){
 				right();
+			}else if (message.login){
+				currentLogin = message.login;
 			}
 		});
 	}
@@ -142,11 +147,14 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 		document.querySelector('.parent').addEventListener('touchstart', touchCallBack, false);
 		document.querySelector('.parent').addEventListener('touchend', touchCallBack, false);
 
-		var validateElemnt = document.querySelector('.validate');
-		validateElemnt.addEventListener('click', function(){
-			var loginValue = document.querySelector('input').value;
+		var validateElement = document.querySelector('.validate');
+		var loginElement = document.querySelector('input');
+		validateElement.addEventListener('click', function(){
+			var loginValue = loginElement.value;
 			if (loginValue.length > 0 ){
 				socket.emit('message', {login : loginValue});
+				validateElement.setAttribute('disabled',true);
+				loginElement.setAttribute('disabled',true);
 			}
 			
 		});
@@ -164,10 +172,53 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 				}
 			}
 		},1000);
+
+		socket.on('message', function(message){
+			if (message.action && message.action === 'start'){
+				validateElement.removeAttribute('disabled');
+				loginElement.removeAttribute('disabled');
+				loginElement.value = '';
+			}
+		});
+	}
+
+	function game_over(){
+		var scores = localStorage.get('scores');
+		if (!scores){
+			scores = {};
+		}
+		var loginModified = currentLogin.trim().replace(' ','_').toUpperCase();
+		scores[loginModified] = game.score;
+
+		top10 = [];
+		var keys = Object.keys(scores);
+		for (key in scores){
+			if (scores.hasOwnProperty(key)){
+				var scoreTmp = scores[key];
+				if (top10.length < 10 || top10[9].score < scoreTmp){
+					top10.push({login : key, score : scoreTmp});
+				}
+				for (var i = top10.length-1; i > 0; i--){
+					if (top10[i].score > top10[i-1].score){
+						var sauvTemp = top10[i-1];
+						top10[i-1] = top10[i];
+						top10[i] = sauvTemp;
+					}
+				}
+
+				top10 = top10.slice(0,10);
+			}
+		}
+
+
+		localStorage.setItem('scores', scores);
+		
 	}
 
 	init();
 
 
-	return{};
+	return{
+		game_over: game_over
+	};
 }();

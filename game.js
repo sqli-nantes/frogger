@@ -204,6 +204,7 @@ function game_over() {
         context.fillText("YOU GOT A", 20, 380);
         context.fillText("HIGHSCORE", 6, 460);
     }
+    FROGGER_SQLI.game_over();
 }
 
 
