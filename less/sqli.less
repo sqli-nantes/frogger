@@ -6,6 +6,8 @@
 @white: white;
 @black: black;
 
+@green_frogger : #33CC00;
+
 
 @font-face {
     font-family: 'minecraftia';
@@ -98,3 +100,71 @@ html{
 	}
 }
 
+
+
+#game_div canvas, #classement{
+	position: absolute;
+	width: 399px;
+	height: 565px;
+	left: 50%;
+	top: 0;
+	margin-left: -200px;
+    background-color: #cb630a;
+    padding: 5px;
+    margin-top: 10px;
+    border-width: 60px;
+    border-color: #010101;
+    border-style: solid;
+}
+
+#classement{
+    background-color: #191970;
+    text-align: center;
+
+    hr{
+    	border-color:@green_frogger;
+    }
+
+    .game_over{
+    	margin-top: 20px;
+    	.user{
+    		color : white;
+	    	font-size: 20px;
+	    	line-height: 30px;
+	    	font-weight: 400;
+	    	width: 100%;
+	    	text-align: center;
+    	}
+    }
+
+    .game_over, .scores_parent{
+    	color : @green_frogger;
+    	font-weight: 600;
+    	font-size: 45px;
+    }
+
+    .scores{
+    	color : white;
+    	font-size: 20px;
+    	line-height: 30px;
+    	font-weight: 400;
+    	width: 100%;
+    	position:relative;
+
+    	.rank, .login, .score{
+    		float: left;
+    	}
+    	.rank{
+    		width: 60px;
+    		text-align: left;    		
+    	}
+    	.score{
+			width: 200px;
+			text-align: right;
+    	}
+    	.login{
+    		text-align: left;
+    		width:calc(399px - 200px - 60px);
+    	}
+    }
+}

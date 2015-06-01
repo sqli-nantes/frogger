@@ -9,7 +9,8 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 		boing = false,
 		touch = {},
 		currentLogin = 'anonymous'
-		top10 = [];
+		top10 = [],
+		gameStart = true;
 
 	function init(){		
 		socket = io();
@@ -42,6 +43,8 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 
 		var resetElemnt = document.querySelector('.reset');
 		resetElemnt.addEventListener('click', function(){
+			gameStart = true;
+			document.querySelector('#classement').style.display= 'none';
 			game.lives = 5;
 			game.score = 0;
 			game.level = 1;
@@ -183,9 +186,16 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 	}
 
 	function game_over(){
-		var scores = localStorage.get('scores');
+		if (!gameStart){
+			return;
+		}
+		gameStart = false;
+		document.querySelector('#classement').style.display= '';
+		var scores = localStorage.getItem('scores');
 		if (!scores){
 			scores = {};
+		}else{
+			scores = JSON.parse(scores);
 		}
 		var loginModified = currentLogin.trim().replace(' ','_').toUpperCase();
 		scores[loginModified] = game.score;
@@ -210,10 +220,19 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 			}
 		}
 
+		var scoreElt = document.querySelector('#classement .scores_parent .scores');
+		var contentHtml = '';
+		for (topKey in top10){
+			contentHtml += "<div class='rank'>"+(+topKey+1)+"</div>"
+			+"<div class='login'>"+top10[topKey].login+"</div>"
+			+"<div class='score'>"+top10[topKey].score+"</div>";
+		}
+		scoreElt.innerHTML = contentHtml;
+
+		document.querySelector('.game_over .user').innerHTML = currentLogin+" : "+game.score;
 
 
-
-		localStorage.setItem('scores', scores);
+		localStorage.setItem('scores', JSON.stringify(scores));
 		
 	}
 
