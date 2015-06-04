@@ -147,8 +147,8 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 
 	function initPhone(){
 		window.addEventListener('devicemotion', motionCallBack, true);
-		document.querySelector('.parent').addEventListener('touchstart', touchCallBack, false);
-		document.querySelector('.parent').addEventListener('touchend', touchCallBack, false);
+		document.querySelector('.touch-area').addEventListener('touchstart', touchCallBack, false);
+		document.querySelector('.touch-area').addEventListener('touchend', touchCallBack, false);
 
 		var validateElement = document.querySelector('.validate');
 		var loginElement = document.querySelector('input');
@@ -158,6 +158,7 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 				socket.emit('message', {login : loginValue});
 				validateElement.setAttribute('disabled',true);
 				loginElement.setAttribute('disabled',true);
+				document.querySelector('.parent').style.display = 'none';
 			}
 			
 		});
@@ -181,6 +182,7 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 				validateElement.removeAttribute('disabled');
 				loginElement.removeAttribute('disabled');
 				loginElement.value = '';
+				document.querySelector('.parent').style.display = '';
 			}
 		});
 	}
