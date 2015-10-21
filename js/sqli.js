@@ -81,7 +81,7 @@ var FROGGER_SQLI = FROGGER_SQLI || function(){
 			Etape 4 : l'accélération s'arrete (on a finit notre mouvement)
 		*/
 
-		var data = Math.abs(motion.acceleration.y);
+		var data = Math.abs(motion.accelerationIncludingGravity.y);
 		//console.warn("Acc : %s",data);
 		if (data > 10){				
 			timeStep = new Date().getTime();
